@@ -106,8 +106,8 @@ def makebooking():
 
 
 @app.errorhandler(404)
-def error_handler_404():
-    return "<h3>Page not found, please back to previous pages!</h3>"
+def error_handler_404(error):
+    return render_template("404.html")
 
 
 if __name__ == "__main__":
