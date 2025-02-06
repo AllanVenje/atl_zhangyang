@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}ATL - Home{% endblock %}
+
+{% block content %}
+
+
+<style>
+    body {
+/*        https://www.tripsavvy.com/thmb/7pEOGMVeCbvcNmT60iqYPH-J6-A=/2119x1415/filters:fill(auto,1)/panoramic-view-nature-landscape-in-south-island-new-zealand-898280184-b1d7fd1b8e86441083b564d31a75066e.jpg*/
+        background-image: url({{ url_for('static', filename='img/Covers.jpg')}});
+    }
+</style>
+
+<div class="container mt-5">
+<!--    https://th.bing.com/th/id/R.3c0e2d5669061634226a134eaf89bd61?rik=A24kJfYsQUU8hQ&pid=ImgRaw&r=0-->
+    <img src="{{ url_for('static', filename='img/flags.jpg') }}" height="200" width="400"
+        alt="New Zealand Flags"><br /><br />
+    <div class="alert alert-success" role="alert">
+        <h1 class="alert-heading">Home</h1>
+        <p> New Zealand is a country of stunning and diverse natural beauty: jagged mountains, rolling pasture land,
+            steep fiords, pristine trout-filled lakes, raging rivers, scenic beaches, and active volcanic zones. These
+            islands are one of Earth's most peculiar bioregions, inhabited by flightless birds seen nowhere else such as
+            a nocturnal, burrowing parrot called the kakapo and kiwi. Kiwi are not only one of the national symbols –
+            the others being the silver fern leaf and koru – but also the name New Zealanders usually call themselves.
+        </p>
+        <hr>
+        <p class="mb-0">These islands are sparsely populated, particularly away from the North Island, but easily
+            accessible. There are sparklingly modern visitor facilities, and transport networks are well developed with
+            airports throughout the country and well maintained highways. New Zealand often adds an adventure twist to
+            nature: it's the original home of jet-boating through shallow gorges, and bungy jumping off anything high
+            enough to give a thrill.</p>
+    </div>
+</div>
+<br/>
+<div class="container text-center">
+    <div class="row align-items-center">
+      <div class="col">
+        <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/';">Home</button>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/tours';">Tours</button>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers';">Customers</button>
+      </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

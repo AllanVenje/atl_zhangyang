@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}ATL - Tour Customers{% endblock %}
+
+{% block content %}
+
+<!-- Display a list of the customers on the tour -->
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Tour</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#" style="background-color: black; color:white;">Tour Name: {{ tourname }}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" style="background-color:blue; color:white;">The number of tour destinations: <span class="badge  bg-danger"> {{ customerlist|length }}</span></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      Customer Lists
+    </div>
+  </nav>
+
+
+<table class="table table-bordered" id="tour-table">
+    <thead>
+      <tr>
+        <th scope="col" style="background-color:blue;color:white;text-align:center;">#</th>
+        <th scope="col" style="background-color:red;color:white;text-align:center;">Booking ID</th>
+        <th scope="col" style="background-color:green;color:white;text-align:center;">First Name</th>
+        <th scope="col" style="background-color:green;color:white;text-align:center;">Family Name</th>
+        <th scope="col" style="background-color:green;color:white;text-align:center;">Date of Birth</th>
+        <th scope="col" style="background-color:green;color:white;text-align:center;">Email</th>
+        <th scope="col" style="background-color:green;color:white;text-align:center;">Phone</th>
+        <!-- <th scope="col">Tour ID</th> -->
+        <th scope="col" style="background-color:black;color:white;">Tour Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in customerlist %}
+        <tr>
+            <th scope="row" style="text-align: center;">{{loop.index}}</th>
+            <td style="text-align: center;">{{r['bookingid']}}</td>
+            <td style="text-align: center;">{{r['firstname']}}</td>
+            <td style="text-align: center;">{{r['familyname']}}</td>
+            <td style="text-align: center;">{{r['dob']}}</td>
+            <td style="text-align: center;">{{r['email']}}</td>
+            <td style="text-align: center;">{{r['phone']}}</td>
+            <!-- <td>{{r['tourid']}}</td> -->
+            <td style="text-align: center;">{{r['tourname']}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

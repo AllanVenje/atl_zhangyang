@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}ATL - Home{% endblock %}
+
+{% block content %}
+
+<style>
+    body {
+        /*https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg */
+        background-image: url({{ url_for('static', filename='img/customer_new.jpg')}});
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        height: 100vh;
+        margin: 0;
+    }
+</style>
+
+
+{% if adduser == True %}
+<div class="ontainer-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h2 class="card-title text-center">
+                        <div class="alert alert-success" role="alert">
+                            New Customer Registration
+                        </div>
+                    </h2>
+                    <form>
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label"><i class="bi bi-1-circle-fill"></i> First
+                                Name</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="Ex: Mike" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label"><i class="bi bi-2-circle-fill"></i></i> Last
+                                Name</label>
+                            <input type="text" class="form-control" id="lastName" placeholder="Ex: Fished" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="birthday" class="form-label"><i class="bi bi-3-circle-fill"></i> Date
+                                of Birthday</label>
+                            <input type="date" class="form-control" id="birthday" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label"><i class="bi bi-4-circle-fill"></i></i>
+                                Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Ex: input your email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label"><i class="bi bi-5-circle-fill"></i> Phone</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="Phone(Not required)">
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-success" style="width:25%;">OK</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%endif%}
+
+{% if edituser == True %}
+<div class="container">
+    <div class="col-md-6">
+        <form id="customers_edit" action="/customers/edit" method="POST">
+            <div style="margin-bottom: 15px;">
+                <label for="customerlist">Choose your edit customer:</label>
+                <select class="form-control" id="customerlist">
+                    {% for c in customerlists %}
+                    <option value="{{c['customerid']}}">{{c['firstname']}} {{c['familyname']}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+
+{% if customers is defined %}
+<br>
+<div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+    <h3>Customer List: Total {{ customers | length }} HCs</h3>
+    <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/add';">Add
+        Customers [New]...</button>
+    <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/edit';">Edit
+        Customers [Selected]...</button>
+    <!-- <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers';">Refreash</button> -->
+</div>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Customer ID</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Family Name</th>
+            <th scope="col">Date of Birth</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for customer in customers %}
+        <tr>
+            <td class="table-success">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="user-radio" id="user-radio"
+                        value="{{ customer.customerid }}" checked>
+                    <label class="form-check-label" for="user-radio">&nbsp;&nbsp;{{ customer.customerid }} </label>
+                </div>
+            </td>
+            <td>{{ customer.firstname }}</td>
+            <td>{{ customer.familyname }}</td>
+            <td>{{ customer.dob }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.phone }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    document.querySelectorAll('.user-radio').forEach(radio => {
+        radio.addEventListener('change', function () {
+            const userId = this.getAttribute('data-user-id');
+            console.log(`Choosed ID: ${userId}`);
+        });
+    });
+</script>
+{% endif %}
+
+{% endblock %}
