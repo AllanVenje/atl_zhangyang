@@ -6,64 +6,86 @@
 
 <style>
     body {
-        /*https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg */
-        background-image: url({{ url_for('static', filename='img/customer_new.jpg')}});
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: center;
-        height: 100vh;
-        margin: 0;
-    }
+            /*https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg */
+            background-image: url({{ url_for('static', filename='img/customer_new.jpg')}});
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+        }
 </style>
 
 
 {% if adduser == True %}
-<div class="ontainer-fluid">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card mt-5">
-                <div class="card-body">
-                    <h2 class="card-title text-center">
-                        <div class="alert alert-success" role="alert">
-                            New Customer Registration
-                        </div>
-                    </h2>
-                    <form>
-                        <div class="mb-3">
-                            <label for="firstName" class="form-label"><i class="bi bi-1-circle-fill"></i> First
-                                Name</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="Ex: Mike" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="lastName" class="form-label"><i class="bi bi-2-circle-fill"></i></i> Last
-                                Name</label>
-                            <input type="text" class="form-control" id="lastName" placeholder="Ex: Fished" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="birthday" class="form-label"><i class="bi bi-3-circle-fill"></i> Date
-                                of Birthday</label>
-                            <input type="date" class="form-control" id="birthday" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label"><i class="bi bi-4-circle-fill"></i></i>
-                                Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Ex: input your email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone" class="form-label"><i class="bi bi-5-circle-fill"></i> Phone</label>
-                            <input type="tel" class="form-control" id="phone" placeholder="Phone(Not required)">
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn btn-success" style="width:25%;">OK</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<div class="container mt-5">
+    <h2 class="card-title text-center">New Customer Registration</h2>
+    <form action="/customers/add" method="POST">
+        <div class="mb-3">
+            <label for="firstName" class="form-label"><i class="bi bi-1-circle-fill"></i> First
+                Name</label>
+            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Ex: Mike" required>
         </div>
-    </div>
+        <div class="mb-3">
+            <label for="familyname" class="form-label"><i class="bi bi-2-circle-fill"></i></i>FamilyName</label>
+            <input type="text" class="form-control" id="familyname" name="familyname" placeholder="Ex: Fished" required>
+        </div>
+        <div class="mb-3">
+            <label for="birthday" class="form-label"><i class="bi bi-3-circle-fill"></i> Date
+                of Birthday</label>
+            <div id="birthday_toast"></div>
+            <input type="date" class="form-control" id="birthday" name="birthday" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label"><i class="bi bi-4-circle-fill"></i></i>
+                Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Ex: input your email"
+                required>
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label"><i class="bi bi-5-circle-fill"></i>
+                Phone</label>
+            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone(Not required)">
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-success" style="width:25%;">OK</button>
+        </div>
+    </form>
 </div>
-{%endif%}
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var birthday = document.getElementById('birthday');
+        birthday.addEventListener('change', function () {
+            var input_date = new Date(birthday.value);
+            var today_date = new Date();
+            var actual_age = today_date.getFullYear() - input_date.getFullYear();
+            var monthDiff = today_date.getMonth() - input_date.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today_date.getDate() < input_date.getDate())) {
+                actual_age--;
+            }
+
+            var toast = document.getElementById('birthday_toast');
+            if (actual_age < 18) {
+                toast.textContent = "You are under 18 years old, please input your parents";
+                toast.style.display = "block";
+                setTimeout(() => {
+                    toast.style.display = "none";
+                }, 3000);
+            } else if (actual_age >= 110) {
+                toast.textContent = "You are over 110 years old, please input your real information.";
+                toast.style.display = "block";
+                setTimeout(() => {
+                    toast.style.display = "none";
+                }, 3000);
+            }
+
+        });
+    });
+</script>
+{% endif %}
 
 {% if edituser == True %}
 <div class="container">
@@ -73,7 +95,7 @@
                 <label for="customerlist">Choose your edit customer:</label>
                 <select class="form-control" id="customerlist">
                     {% for c in customerlists %}
-                    <option value="{{c['customerid']}}">{{c['firstname']}} {{c['familyname']}}</option>
+                    <option value="{{ c['customerid'] }}">{{ c['firstname'] }} {{ c['familyname'] }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -82,16 +104,22 @@
 </div>
 {% endif %}
 
+{# if dups is true, found the customers, don't add again #}
+{% if dups == True %}
+
+{% endif %}
 
 {% if customers is defined %}
 <br>
 <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
     <h3>Customer List: Total {{ customers | length }} HCs</h3>
     <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/add';">Add
-        Customers [New]...</button>
+        Customers [New]... </button>
     <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/edit';">Edit
-        Customers [Selected]...</button>
-    <!-- <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers';">Refreash</button> -->
+        Customers [Selected]...
+    </button>
+    <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/booking';">Booking
+        Tour</button>
 </div>
 
 <table class="table table-striped table-hover">

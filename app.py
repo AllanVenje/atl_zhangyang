@@ -27,7 +27,6 @@ def getCursor():
         dbconn = connection.cursor(dictionary= True)
     return dbconn
 
-
  
 @app.route("/")
 def home():
@@ -86,16 +85,29 @@ def customers():
     return render_template("customers.html", customers=customers) 
 
 
-@app.route("/customers/add")
+@app.route("/customers/add", methods=["GET", "POST"])
 def addcustomer():
     #Add a new customer
-    print(">>> Customer Edit")
-    return render_template("customers.html", adduser=True)
+    print(">>>Debug: Customer Add")
+    if request.method == "POST":
+        req_customer_firstname = request.form.get("firstname")
+        req_customer_familyname = request.form.get("familyname")
+        req_customer_dob = request.form.get("birthday")
+        req_customer_email = request.form.get("email")
+        req_customer_phone = request.form.get("phone")
 
+        mycustor = getCursor()
+        # Insert records
+        insert_str = "INSERT INTO customers (firstname, familyname, dob, email, phone) VALUES (%s, %s, %s, %s, %s)"; 
+        mycustor.execute(insert_str, (req_customer_firstname, req_customer_familyname, req_customer_dob, req_customer_email, req_customer_phone))
+        return redirect(url_for("customers"))
+    elif request.method == "GET":
+        return render_template("customers.html", adduser=True)
 
-@app.route("/customers/edit")
+@app.route("/customers/edit", methods=["GET", "POST"])
 def editcustomer():
-    return render_template("customers.html", edituser=True)
+    if request.method == "POST":
+        return render_template("customers.html", edituser=True)
 
 
 
