@@ -16,7 +16,7 @@
     }
 </style>
 
-{% if booking_render = 1 %}
+{% if booking_render == 1 %}
 
 <div class="container mt-5">
     <p class="fs-1 font-monospace text-center">New Booking Tours</p>
@@ -40,6 +40,7 @@
                 <label for="tour" class="form-label  font-monospace fw-bold"><i class="bi bi-2-circle-fill"></i> Tour
                     Name:</label>
                 <select class="form-select" id="tour" name="tour" required>
+                    <option value="0">No Select</option>
                     {% for tour in tours %}
                     <option value="{{ tour.tourid }}">{{ tour.tourname }}</option>
                     {% endfor %}
@@ -69,9 +70,30 @@
         </div>
     </form>
 </div>
+
+<script>
+    const tourid_selector = document.getElementById('tour');
+    tourid_selector.addEventListener('change', function() {
+    console.log(">>> Debug: Changed! ");
+    const tourid_selector_text = tourid_selector.options[tourid_selector.selectedIndex].text;
+    if (tourid_selector_text === 'No Select') return;
+    console.log(tourid_selector_text)
+    fetch('/booking/add', {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+            tourname: tourid_selector_text
+        })
+    })
+    .then(text => console.log(text))
+    .catch(error => console.error('Error:', error));
+    });
+</script>
 {% endif %}
 
-{% if booking_render = 2 %}
+{% if booking_render == 2 %}
 
 {% endif %}
 

@@ -143,19 +143,27 @@ def makebooking():
         req_customerid = request.form.get("customerid")
         req_tourid = request.form.get('tourid')
         req_tourgroupid = request.form.get("tourgroupid")
+        req_tourname = request.form.get('tourname')
+
         mycursor = getCursor()
-        sqlstr = "INSERT INTO tourbookings (customerid, tourgroupid) VALUES (%s, %s);"
-        mycursor.execute(sqlstr, (req_customerid, req_tourgroupid))
 
-        sqlstr = "SELECT tourbookings.bookingid, tourbookings.customerid, tourbookings.tourgroupid, \
-                    customers.firstname, customers.familyname, customers.dob, customers.email, customers.phone, \
-                    tours.tourid, tours.tourname, tourgroups.startdate \
-                    FROM tourbookings \
-                    JOIN customers ON customers.customerid = tourbookings.customerid \
-                    JOIN tours ON tours.tourid = tourbookings.tourid"
+        if req_tourname != '':
+            sqlstr = f"""SELECT tg.tourgroupid, tg.tourid, tg.startdate FROM tourgroups AS tg 
+                       JOIN tours AS t ON t.tourid=tg.tourid WHERE t.tourname='{req_tourname}' ORDER BY tg.startdate ASC;"""
+            mycursor.execute(sqlstr)
+            tourgroups = mycursor.fetchall()
+            return jsonify(tourgroups)
+        else:
+            sqlstr = "INSERT INTO tourbookings (customerid, tourgroupid) VALUES (%s, %s);"
+            mycursor.execute(sqlstr, (req_customerid, req_tourgroupid))
 
-
-        return render_template("booking.html", booking_render=2)
+            sqlstr = "SELECT tourbookings.bookingid, tourbookings.customerid, tourbookings.tourgroupid, \
+                        customers.firstname, customers.familyname, customers.dob, customers.email, customers.phone, \
+                        tours.tourid, tours.tourname, tourgroups.startdate \
+                        FROM tourbookings \
+                        JOIN customers ON customers.customerid = tourbookings.customerid \
+                        JOIN tours ON tours.tourid = tourbookings.tourid"
+            return render_template("booking.html", booking_render=2)
     elif request.method == "GET":
         mycursor = getCursor()
         sqlstr = "SELECT * FROM customers;"
