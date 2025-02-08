@@ -3,6 +3,7 @@ from flask import render_template
 from flask import request
 from flask import redirect
 from flask import url_for
+from flask import jsonify
 from datetime import date, datetime, timedelta
 import mysql.connector
 import mysql.connector.pooling
@@ -63,7 +64,7 @@ def tourlist():
     tourname = my_cursor.fetchone()['tourname']; # update to get the name of the tour
 
     sqlstr = f"SELECT customers.firstname, customers.familyname, customers.dob, customers.email, customers.phone, \
-              tours.tourid, tours.tourname, tourbookings.bookingid \
+                tours.tourid, tours.tourname, tourbookings.bookingid \
                 FROM customers \
                 JOIN tours ON tours.tourid={tourid} \
                 JOIN tourgroups ON tourgroups.tourid = {tourid} \
@@ -75,14 +76,14 @@ def tourlist():
     return render_template("tourlist.html", tourname = tourname, customerlist = customerlist)
 
 
-@app.route("/customers")
+@app.route("/customers", methods=["GET", "POST"])
 def customers():
     #List customer details.
     my_cursor = getCursor()
     sqlstr = "SELECT * FROM customers;"
     my_cursor.execute(sqlstr)
     customers = my_cursor.fetchall()
-    return render_template("customers.html", customers=customers) 
+    return render_template("customers.html",customer=3, customers=customers)
 
 
 @app.route("/customers/add", methods=["GET", "POST"])
@@ -102,19 +103,39 @@ def addcustomer():
         mycustor.execute(insert_str, (req_customer_firstname, req_customer_familyname, req_customer_dob, req_customer_email, req_customer_phone))
         return redirect(url_for("customers"))
     elif request.method == "GET":
-        return render_template("customers.html", adduser=True)
+        return render_template("customers.html", customer=1)
 
 @app.route("/customers/edit", methods=["GET", "POST"])
 def editcustomer():
     if request.method == "POST":
-        return render_template("customers.html", edituser=True)
+        req_customer_id = request.form.get("customerid")
+        return redirect(url_for("customers"))
+    elif request.method == "GET":
+        mycursor = getCursor()
+        sqlstr = "SELECT * FROM customers";
+        mycursor.execute(sqlstr)
+        customers = mycursor.fetchall()
+        return render_template("customers.html", customer=2, customers=customers)
 
-
-
-@app.route("/booking/add")
+@app.route("/booking/add", methods=["GET", "POST"])
 def makebooking():
     #Make a booking
-    return render_template()
+    if request.method == "POST":
+        req_customer_id = request.form.get("customerid")
+        my_cursor = getCursor()
+        # search for the customer record
+        sqlstr = f"SELECT * FROM customers WHERE customerid = {req_customer_id};"
+        my_cursor.execute(sqlstr)
+        req_firstname = my_cursor.fetchone['firstname']
+        req_familyname = my_cursor.fetchone['familyname']
+        data = {
+            'customerid': req_customer_id,
+            'firstname': req_firstname,
+            'familyname': req_familyname
+        }
+        return jsonify(data);
+    elif request.method == "GET":
+        return render_template("booking.html", addbooking=False)
 
 
 @app.errorhandler(404)

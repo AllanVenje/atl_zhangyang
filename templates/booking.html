@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}ATL - Booking{% endblock %}
+
+{% block content %}
+<style>
+    body {
+            /*https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg */
+            background-image: url({{ url_for('static', filename='img/customer_new.jpg') }});
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+        }
+</style>
+
+
+<div class="container justify-content-center d-flex mt-5">
+    <h2 class="card-title text-center">New Booking Tours</h2>
+    <form action="/booking/add" method="POST">
+        <div class="mb-3">
+            <div class="alert alert-warning" role="alert">
+                {% for customer in customers %}
+                <h3> Welcome， {{ customer.firstname }}, {{ customer.familyname }} </h3>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="familyname" class="form-label"><i class="bi bi-2-circle-fill"></i></i>FamilyName</label>
+            <input type="text" class="form-control" id="familyname" name="familyname" placeholder="Ex: Fished" required>
+        </div>
+        <button type="submit" class="btn btn-success" style="width:25%;">OK</button>
+        <button type="button" class="btn btn-danger" style="width:25%;" onclick="window.location.href = '/customers';">Cancel</button>
+    </form>
+</div>
+
+{% endblock %}

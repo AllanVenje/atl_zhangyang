@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}ATL - Home{% endblock %}
+{% block title %}ATL - Customers{% endblock %}
 
 {% block content %}
 
-<style>
-    body {
+    <style>
+        body {
             /*https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg */
-            background-image: url({{ url_for('static', filename='img/customer_new.jpg')}});
+            background-image: url({{ url_for('static', filename='img/customer_new.jpg') }});
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -15,152 +15,194 @@
             height: 100vh;
             margin: 0;
         }
-</style>
+    </style>
+
+<!--customer add-->
+    {% if customer == 1 %}
+        <div class="container mt-5">
+            <h2 class="card-title text-center">New Customer Registration</h2>
+            <form action="/customers/add" method="POST">
+                <div class="mb-3">
+                    <label for="firstName" class="form-label"><i class="bi bi-1-circle-fill"></i> <mark>First
+                        Name</mark></label>
+                    <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Ex: Mike"
+                            required>
+                </div>
+                <div class="mb-3">
+                    <label for="familyname" class="form-label"><i class="bi bi-2-circle-fill"></i></i><mark>FamilyName</mark></label>
+                    <input type="text" class="form-control" id="familyname" name="familyname" placeholder="Ex: Fished"
+                            required>
+                </div>
+                <div class="mb-3">
+                    <label for="birthday" class="form-label"><i class="bi bi-3-circle-fill"></i> <mark>Date
+                        of Birthday</mark></label>
+                    <div id="birthday_toast"></div>
+                    <input type="date" class="form-control" id="birthday" name="birthday" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label"><i class="bi bi-4-circle-fill"></i></i>
+                        <mark>Email</mark></label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Ex: input your email"
+                            required>
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label"><i class="bi bi-5-circle-fill"></i>
+                        <mark>Phone</mark></label>
+                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone(Not required)">
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success" style="width:25%;">OK</button>
+                    <button type="button" class="btn btn-danger" style="width:25%;" onclick="window.location.href = '/customers';">Cancel</button>
+                </div>
+            </form>
+        </div>
 
 
-{% if adduser == True %}
-<div class="container mt-5">
-    <h2 class="card-title text-center">New Customer Registration</h2>
-    <form action="/customers/add" method="POST">
-        <div class="mb-3">
-            <label for="firstName" class="form-label"><i class="bi bi-1-circle-fill"></i> First
-                Name</label>
-            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Ex: Mike" required>
-        </div>
-        <div class="mb-3">
-            <label for="familyname" class="form-label"><i class="bi bi-2-circle-fill"></i></i>FamilyName</label>
-            <input type="text" class="form-control" id="familyname" name="familyname" placeholder="Ex: Fished" required>
-        </div>
-        <div class="mb-3">
-            <label for="birthday" class="form-label"><i class="bi bi-3-circle-fill"></i> Date
-                of Birthday</label>
-            <div id="birthday_toast"></div>
-            <input type="date" class="form-control" id="birthday" name="birthday" required>
-        </div>
-        <div class="mb-3">
-            <label for="email" class="form-label"><i class="bi bi-4-circle-fill"></i></i>
-                Email</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Ex: input your email"
-                required>
-        </div>
-        <div class="mb-3">
-            <label for="phone" class="form-label"><i class="bi bi-5-circle-fill"></i>
-                Phone</label>
-            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone(Not required)">
-        </div>
-        <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-success" style="width:25%;">OK</button>
-        </div>
-    </form>
-</div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var birthday = document.getElementById('birthday');
+                birthday.addEventListener('change', function () {
+                    var input_date = new Date(birthday.value);
+                    var today_date = new Date();
+                    var actual_age = today_date.getFullYear() - input_date.getFullYear();
+                    var monthDiff = today_date.getMonth() - input_date.getMonth();
+                    if (monthDiff < 0 || (monthDiff === 0 && today_date.getDate() < input_date.getDate())) {
+                        actual_age--;
+                    }
 
+                    var toast = document.getElementById('birthday_toast');
+                    if (actual_age < 18) {
+                        toast.textContent = "You are under 18 years old, please input your parents";
+                        toast.style.display = "block";
+                        setTimeout(() => {
+                            toast.style.display = "none";
+                        }, 3000);
+                    } else if (actual_age >= 110) {
+                        toast.textContent = "You are over 110 years old, please input your real information.";
+                        toast.style.display = "block";
+                        setTimeout(() => {
+                            toast.style.display = "none";
+                        }, 3000);
+                    }
+                });
+            });
+        </script>
+    {% endif %}
+
+<!-- customer edit -->
+    {% if customer == 2 %}
+        <div class="container justify-content-center d-flex">
+            <div class="col-md-6">
+                <h2 class="card-title text-center">Edit Customer Information</h2>
+                <br/>
+                <form id="customers_edit" action="/customers/edit" method="POST">
+                    <div style="margin-bottom: 15px;">
+                        <label for="customerlist"><mark>Choose your firstname :</mark></label>
+                        <select class="form-control" id="customer">
+                            {% for c in customers %}
+                                <option value="{{ c['customerid'] }}">{{ c['firstname'] }} {{ c['familyname'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dob"><mark>New Date of Birth</mark></label>
+                        <input style="border-radius: 5px;" type="date" class="form-control" id="dob" name="dob" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email"><mark>New Email</mark></label>
+                        <input style="border-radius: 5px;" type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone"><mark>New Phone</mark></label>
+                        <input style="border-radius: 5px;" type="tel" class="form-control" id="phone" name="phone" >
+                    </div>
+                    <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success" style="width:25%;">OK</button>
+                    <button type="button" class="btn btn-danger" style="width:25%;" onclick="window.location.href = '/customers';">Cancel</button>
+                </div>
+                </form>
+            </div>
+        </div>e
+    {% endif %}
+
+<!-- customer display -->
+    {% if customer == 3 %}
+        <br>
+        <div class="shadow p-4 mb-5 bg-body-tertiary rounded">
+            <h3>Customer List: Total {{ customers | length }} HCs</h3>
+            <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/add';">Add
+                Customers [New]...
+            </button>
+            <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/edit';">
+                Edit
+                Customers [Selected]...
+            </button>
+            <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/booking/add';">
+                Add Booking [Tour]...
+            </button>
+            <div class="container mt-5">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="search-input" placeholder="Search By First Name">
+                    <br>
+                    <div class="input-group-append">
+                        <button class="btn btn-lg btn-warning" type="button" id="search-button">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table id="customer-table" class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Customer ID</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Family Name</th>
+                <th scope="col">Date of Birth</th>
+                <th scope="col">Email</th>
+                <th scope="col">Phone</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for customer in customers %}
+                <tr>
+                    <td class="table-success">{{ customer.customerid }}</td>
+                    <td>{{ customer.firstname }}</td>
+                    <td>{{ customer.familyname }}</td>
+                    <td>{{ customer.dob }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.phone }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var birthday = document.getElementById('birthday');
-        birthday.addEventListener('change', function () {
-            var input_date = new Date(birthday.value);
-            var today_date = new Date();
-            var actual_age = today_date.getFullYear() - input_date.getFullYear();
-            var monthDiff = today_date.getMonth() - input_date.getMonth();
-            if (monthDiff < 0 || (monthDiff === 0 && today_date.getDate() < input_date.getDate())) {
-                actual_age--;
-            }
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+    const tableRows = document.querySelectorAll('#customer-table tbody tr');
 
-            var toast = document.getElementById('birthday_toast');
-            if (actual_age < 18) {
-                toast.textContent = "You are under 18 years old, please input your parents";
-                toast.style.display = "block";
-                setTimeout(() => {
-                    toast.style.display = "none";
-                }, 3000);
-            } else if (actual_age >= 110) {
-                toast.textContent = "You are over 110 years old, please input your real information.";
-                toast.style.display = "block";
-                setTimeout(() => {
-                    toast.style.display = "none";
-                }, 3000);
-            }
-
-        });
+    searchButton.addEventListener('click', function () {
+      const value = searchInput.value.trim().toLowerCase();
+      tableRows.forEach(row => {
+        const rowText = row.textContent.trim().toLowerCase();
+        if (rowText.includes(value)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
     });
-</script>
-{% endif %}
 
-{% if edituser == True %}
-<div class="container">
-    <div class="col-md-6">
-        <form id="customers_edit" action="/customers/edit" method="POST">
-            <div style="margin-bottom: 15px;">
-                <label for="customerlist">Choose your edit customer:</label>
-                <select class="form-control" id="customerlist">
-                    {% for c in customerlists %}
-                    <option value="{{ c['customerid'] }}">{{ c['firstname'] }} {{ c['familyname'] }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </form>
-    </div>
-</div>
-{% endif %}
-
-{# if dups is true, found the customers, don't add again #}
-{% if dups == True %}
-
-{% endif %}
-
-{% if customers is defined %}
-<br>
-<div class="shadow p-3 mb-5 bg-body-tertiary rounded">
-    <h3>Customer List: Total {{ customers | length }} HCs</h3>
-    <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/add';">Add
-        Customers [New]... </button>
-    <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/edit';">Edit
-        Customers [Selected]...
-    </button>
-    <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/booking';">Booking
-        Tour</button>
-</div>
-
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th scope="col">Customer ID</th>
-            <th scope="col">First Name</th>
-            <th scope="col">Family Name</th>
-            <th scope="col">Date of Birth</th>
-            <th scope="col">Email</th>
-            <th scope="col">Phone</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for customer in customers %}
-        <tr>
-            <td class="table-success">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="user-radio" id="user-radio"
-                        value="{{ customer.customerid }}" checked>
-                    <label class="form-check-label" for="user-radio">&nbsp;&nbsp;{{ customer.customerid }} </label>
-                </div>
-            </td>
-            <td>{{ customer.firstname }}</td>
-            <td>{{ customer.familyname }}</td>
-            <td>{{ customer.dob }}</td>
-            <td>{{ customer.email }}</td>
-            <td>{{ customer.phone }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<script>
-    document.querySelectorAll('.user-radio').forEach(radio => {
-        radio.addEventListener('change', function () {
-            const userId = this.getAttribute('data-user-id');
-            console.log(`Choosed ID: ${userId}`);
-        });
+    searchInput.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+      }
     });
+  });
 </script>
-{% endif %}
+
+
+    {% endif %}
 
 {% endblock %}
