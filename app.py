@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask import Response
 from flask import redirect
 from flask import url_for
 from flask import jsonify
@@ -143,12 +144,12 @@ def makebooking():
         req_customerid = request.form.get("customerid")
         req_tourid = request.form.get('tourid')
         req_tourgroupid = request.form.get("tourgroupid")
-        req_tourname = request.form.get('tourname')
+        req_tourname = request.json
 
         mycursor = getCursor()
 
         if req_tourname != '':
-            sqlstr = f"""SELECT tg.tourgroupid, tg.tourid, tg.startdate FROM tourgroups AS tg 
+            sqlstr = f"""SELECT tg.tourgroupid, tg.tourid, DATE_FORMAT(tg.startdate, '%Y-%m-%d') AS startdate FROM tourgroups AS tg 
                        JOIN tours AS t ON t.tourid=tg.tourid WHERE t.tourname='{req_tourname}' ORDER BY tg.startdate ASC;"""
             mycursor.execute(sqlstr)
             tourgroups = mycursor.fetchall()

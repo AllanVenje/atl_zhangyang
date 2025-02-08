@@ -52,12 +52,7 @@
             <div class="alert alert-warning" role="alert" style="width:75%;">
                 <label for="tourgroups" class="form-label  font-monospace fw-bold"><i class="bi bi-2-circle-fill"></i>
                     Tour Group:</label>
-                <select class="form-select" id="tourgroups" name="tourgroups" required>
-                    {% for tg in tourgroups %}
-                    <option value="{{ tg.tourgroupid }}"> Tour Group: {{ tg.tourgroupid }} -- Start Date: {{
-                        tg.startdate }}
-                    </option>
-                    {% endfor %}
+                <select class="form-select" id="tourgroups" name="tourgroups" required disabled>
                 </select>
             </div>
         </div>
@@ -72,24 +67,43 @@
 </div>
 
 <script>
-    const tourid_selector = document.getElementById('tour');
+    const tourid_selector = document.getElementById('tour')
+    var selectElement = document.getElementById('tourgroups')
+
     tourid_selector.addEventListener('change', function() {
-    console.log(">>> Debug: Changed! ");
-    const tourid_selector_text = tourid_selector.options[tourid_selector.selectedIndex].text;
-    if (tourid_selector_text === 'No Select') return;
-    console.log(tourid_selector_text)
+    console.log(">>> Debug: Changed! ")
+    const tourid_selector_text = tourid_selector.options[tourid_selector.selectedIndex].text
+    
+    console.log(">>> Debug: Clear Tourgroup")
+    selectElement.innerHTML = ''
+
+    if (tourid_selector_text === 'No Select') return
+    console.log(">>> Debug:",  tourid_selector_text)
     fetch('/booking/add', {
         method: "POST",
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/json'
         },
-        body: new URLSearchParams({
-            tourname: tourid_selector_text
-        })
+        body: JSON.stringify(tourid_selector_text)
     })
-    .then(text => console.log(text))
-    .catch(error => console.error('Error:', error));
-    });
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok')
+          }
+          return response.json()
+    })
+    .then(data => {
+        data.forEach (d => {
+            console.log('>>> Debug: Received data, ', 'Start date:', d.startdate, ',Tour id:', d.tourid, ',Tour Groups:', d.tourgroupid)
+            const option = document.createElement('option')
+            option.value = d.tourgroupid
+            option.textContent = d.startdate
+            selectElement.appendChild(option)
+        })
+        selectElement.disabled = false
+    })
+    .catch(error => console.error('Error:', error))
+})
 </script>
 {% endif %}
 
