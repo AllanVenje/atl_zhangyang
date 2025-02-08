@@ -108,7 +108,15 @@ def addcustomer():
 @app.route("/customers/edit", methods=["GET", "POST"])
 def editcustomer():
     if request.method == "POST":
-        req_customer_id = request.form.get("customerid")
+        req_customerid = request.form.get("customerid")
+        req_dob = request.form.get("dob")
+        req_email = request.form.get("email")
+        req_phone = request.form.get("phone")
+
+        sqlstr = "UPDATE customers SET dob=%s, email=%s, phone=%s WHERE customerid=%s;"
+        mycursor = getCursor()
+        mycursor.execute(sqlstr, (req_dob, req_email, req_phone, req_customerid))
+
         return redirect(url_for("customers"))
     elif request.method == "GET":
         mycursor = getCursor()
