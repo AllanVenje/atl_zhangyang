@@ -27,9 +27,9 @@
             <div class="alert alert-warning" role="alert" style="width:75%;">
                 <label for="customer" class="form-label font-monospace fw-bold"><i class="bi bi-1-circle-fill"></i>
                     Customer Name:</label>
-                <select class="form-select" id="customer" name="customer" required>
+                <select class="form-select" id="customer" name="customer">
                     {% for customer in customers %}
-                    <option value="{{ customer.id }}">{{ customer.firstname }} {{ customer.familyname }}</option>
+                    <option value="{{ customer.customerid }}">{{ customer.firstname }} {{ customer.familyname }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -39,7 +39,7 @@
             <div class="alert alert-warning" role="alert" style="width:75%;">
                 <label for="tour" class="form-label  font-monospace fw-bold"><i class="bi bi-2-circle-fill"></i> Tour
                     Name:</label>
-                <select class="form-select" id="tour" name="tour" required>
+                <select class="form-select" id="tour" name="tour">
                     <option value="0">No Select</option>
                     {% for tour in tours %}
                     <option value="{{ tour.tourid }}">{{ tour.tourname }}</option>
@@ -52,7 +52,7 @@
             <div class="alert alert-warning" role="alert" style="width:75%;">
                 <label for="tourgroups" class="form-label  font-monospace fw-bold"><i class="bi bi-2-circle-fill"></i>
                     Tour Group:</label>
-                <select class="form-select" id="tourgroups" name="tourgroups" required disabled>
+                <select class="form-select" id="tourgroups" name="tourgroups" disabled>
                 </select>
             </div>
         </div>
