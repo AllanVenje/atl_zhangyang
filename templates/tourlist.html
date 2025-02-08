@@ -8,30 +8,41 @@
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Tour</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#" style="background-color: black; color:white;">Tour Name: {{ tourname }}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" style="background-color:blue; color:white;">The number of tour destinations: <span class="badge  bg-danger"> {{ customerlist|length }}</span></a>
-          </li>
-        </ul>
-      </div>
+        <a class="navbar-brand" href="#">Tour</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#"
+                        style="background-color: black; color:white;">Tour Name: {{ tourname }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" style="background-color:blue; color:white;">The number of tour
+                        destinations: <span id="booking_count" class="badge  bg-danger"> {{ customerlist|length }}</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" style="background-color:darkgreen; color:white;">  Filter by Customer:</a>
+                </li>
+                <li class="nav-item">
+                    <select class="form-select" id="filter_by_customer" name="filter_by_customer" required>
+                        <option value="0">All</option>
+                        {% for f in filter_customers %}
+                        <option value="{{ f.firstname }} {{ f.familyname }}">{{ f.firstname }} {{ f.familyname }}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+            </ul>
+        </div>
     </div>
-    <div>
-      Customer Lists
-    </div>
-  </nav>
 
+</nav>
 
 <table class="table table-bordered" id="tour-table">
     <thead>
-      <tr>
+        <tr>
         <th scope="col" style="background-color:blue;color:white;text-align:center;">#</th>
         <th scope="col" style="background-color:red;color:white;text-align:center;">Booking ID</th>
         <th scope="col" style="background-color:green;color:white;text-align:center;">First Name</th>
@@ -39,12 +50,11 @@
         <th scope="col" style="background-color:green;color:white;text-align:center;">Date of Birth</th>
         <th scope="col" style="background-color:green;color:white;text-align:center;">Email</th>
         <th scope="col" style="background-color:green;color:white;text-align:center;">Phone</th>
-        <!-- <th scope="col">Tour ID</th> -->
         <th scope="col" style="background-color:black;color:white;">Tour Name</th>
-      </tr>
+        </tr>
     </thead>
     <tbody>
-      {% for r in customerlist %}
+        {% for r in customerlist %}
         <tr>
             <th scope="row" style="text-align: center;">{{loop.index}}</th>
             <td style="text-align: center;">{{r['bookingid']}}</td>
@@ -53,11 +63,38 @@
             <td style="text-align: center;">{{r['dob']}}</td>
             <td style="text-align: center;">{{r['email']}}</td>
             <td style="text-align: center;">{{r['phone']}}</td>
-            <!-- <td>{{r['tourid']}}</td> -->
             <td style="text-align: center;">{{r['tourname']}}</td>
         </tr>
-      {% endfor %}
+        {% endfor %}
     </tbody>
-  </table>
+</table>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filter_by_customer = document.getElementById('filter_by_customer');
+        const tableRows = document.querySelectorAll('#tour-table tbody tr');
+        filter_by_customer.addEventListener('change', function () {
+            const filterValue = filter_by_customer.value;
+            // console.log(">>> Debug:" + filterValue);
+            if (filterValue === '0') {
+                tableRows.forEach(row => {
+                    row.style.display = '';
+                });
+            } else {
+                tableRows.forEach(row => {
+                    const customerId = row.querySelector('td:nth-child(3)').textContent + ' ' + row.querySelector('td:nth-child(4)').textContent;
+                    // console.log(">>> Debug:" + customerId);
+                    if (customerId === filterValue) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+        });
+    });
+
+</script>
 
 {% endblock %}

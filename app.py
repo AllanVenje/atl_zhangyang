@@ -45,7 +45,7 @@ def tours():
         tours = cursor.fetchall()    
         return render_template("tours.html", tours=tours)
     else:
-        
+
         tourid = request.form.get("tourid")      
         qstr = "select tourgroupid, startdate from tourgroups where tourid=%s;" 
         cursor.execute(qstr,(tourid,))        
@@ -53,10 +53,11 @@ def tours():
         return render_template("tours.html", tourid=tourid, tourgroups=tourgroups)
 
 
-@app.route("/tours/list", methods=["POST"])
+@app.route("/tours/list/", methods=["POST"])
 def tourlist():
     tourid = request.form.get('tourid')
     tourgroupid = request.form.get('tourgroupid')
+
     # Display the list of customers on a tour
     my_cursor = getCursor()
     sqlstr = f"SELECT tourname FROM tours WHERE tourid = {tourid};"
@@ -64,16 +65,20 @@ def tourlist():
     tourname = my_cursor.fetchone()['tourname']; # update to get the name of the tour
 
     sqlstr = f"SELECT customers.firstname, customers.familyname, customers.dob, customers.email, customers.phone, \
-                tours.tourid, tours.tourname, tourbookings.bookingid \
-                FROM customers \
-                JOIN tours ON tours.tourid={tourid} \
-                JOIN tourgroups ON tourgroups.tourid = {tourid} \
-                JOIN tourbookings ON tourbookings.tourgroupid = {tourgroupid} \
-                ORDER BY customers.firstname, customers.dob ASC;"""
+                    tours.tourid, tours.tourname, tourbookings.bookingid \
+                    FROM customers \
+                    JOIN tours ON tours.tourid={tourid} \
+                    JOIN tourgroups ON tourgroups.tourid = {tourid} \
+                    JOIN tourbookings ON tourbookings.tourgroupid = {tourgroupid} \
+                    ORDER BY customers.firstname, customers.dob ASC;"
     my_cursor.execute(sqlstr)
     customerlist = my_cursor.fetchall() # update to get a list of customers on the tour
 
-    return render_template("tourlist.html", tourname = tourname, customerlist = customerlist)
+    sqlstr = "SELECT * FROM customers;"
+    my_cursor.execute(sqlstr)
+    filter_customers = my_cursor.fetchall()
+
+    return render_template("tourlist.html", tourname = tourname, customerlist = customerlist, filter_customers = filter_customers)
 
 
 @app.route("/customers", methods=["GET", "POST"])
@@ -123,27 +128,48 @@ def editcustomer():
         sqlstr = "SELECT * FROM customers";
         mycursor.execute(sqlstr)
         customers = mycursor.fetchall()
-        return render_template("customers.html", customer=2, customers=customers)
+
+        # get tour name details
+        sqlstr = "SELECT * FROM tours;"
+        mycursor.execute(sqlstr)
+        tours = mycursor.fetchall()
+
+        return render_template("customers.html", customer=2, customers=customers, tours=tours)
 
 @app.route("/booking/add", methods=["GET", "POST"])
 def makebooking():
     #Make a booking
     if request.method == "POST":
-        req_customer_id = request.form.get("customerid")
-        my_cursor = getCursor()
-        # search for the customer record
-        sqlstr = f"SELECT * FROM customers WHERE customerid = {req_customer_id};"
-        my_cursor.execute(sqlstr)
-        req_firstname = my_cursor.fetchone['firstname']
-        req_familyname = my_cursor.fetchone['familyname']
-        data = {
-            'customerid': req_customer_id,
-            'firstname': req_firstname,
-            'familyname': req_familyname
-        }
-        return jsonify(data);
+        req_customerid = request.form.get("customerid")
+        req_tourid = request.form.get('tourid')
+        req_tourgroupid = request.form.get("tourgroupid")
+        mycursor = getCursor()
+        sqlstr = "INSERT INTO tourbookings (customerid, tourgroupid) VALUES (%s, %s);"
+        mycursor.execute(sqlstr, (req_customerid, req_tourgroupid))
+
+        sqlstr = "SELECT tourbookings.bookingid, tourbookings.customerid, tourbookings.tourgroupid, \
+                    customers.firstname, customers.familyname, customers.dob, customers.email, customers.phone, \
+                    tours.tourid, tours.tourname, tourgroups.startdate \
+                    FROM tourbookings \
+                    JOIN customers ON customers.customerid = tourbookings.customerid \
+                    JOIN tours ON tours.tourid = tourbookings.tourid"
+
+
+        return render_template("booking.html", booking_render=2)
     elif request.method == "GET":
-        return render_template("booking.html", addbooking=False)
+        mycursor = getCursor()
+        sqlstr = "SELECT * FROM customers;"
+        mycursor.execute(sqlstr)
+        customers = mycursor.fetchall()
+        # get tour name details
+        sqlstr = "SELECT * FROM tours;"
+        mycursor.execute(sqlstr)
+        tours = mycursor.fetchall()
+        # get tour group details
+        sqlstr = "SELECT * FROM tourgroups;"
+        mycursor.execute(sqlstr)
+        tourgroups = mycursor.fetchall()
+        return render_template("booking.html", booking_render=1,  customers=customers, tours=tours, tourgroups=tourgroups)
 
 
 @app.errorhandler(404)
