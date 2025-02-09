@@ -9,22 +9,10 @@
 <div class="container mt-5">
     <p class="fs-1 font-monospace text-center">New Booking Tours</p>
     <br/>
-    <div class="d-flex justify-content-center">
-        <div class="alert alert-warning" role="alert" style="width:75%;">
-            <label for="customer" class="form-label font-monospace fw-bold"><i class="bi bi-1-circle-fill"></i>
-                Customer Name:</label>
-            <select class="form-select" id="customer" name="customer">
-                {% for customer in customers %}
-                <option value="{{ customer.customerid }}">{{ customer.firstname }} {{ customer.familyname }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
     <form action="/booking/switch" method="POST">
         <div class="d-flex justify-content-center">
             <div class="alert alert-warning" role="alert" style="width:75%;">
-                <label for="tour" class="form-label  font-monospace fw-bold"><i class="bi bi-2-circle-fill"></i> Tour
+                <label for="tour" class="form-label  font-monospace fw-bold"><i class="bi bi-1-circle-fill"></i> Choose the Tour
                     Name:</label>
                 {% if tours is defined %}
                     <select class="form-select" id="tour" name="tour" onchange="submit();" >
@@ -40,11 +28,13 @@
         </div>
     </form>
 
+
+
     <form action="/booking/add" method="POST">
         <div class="d-flex justify-content-center">
             <div class="alert alert-warning" role="alert" style="width:75%;">
                 <label for="tourgroupid" class="form-label  font-monospace fw-bold"><i class="bi bi-2-circle-fill"></i>
-                    Tour Group:</label>
+                    Choose the Tour Group:</label>
                 <select class="form-select" id="tourgroupid" name="tourgroupid">
                     {% for tg in tourgroups %}
                     <option value="{{ tg.tourgroupid }}">{{ tg.startdate }}</option>
@@ -53,12 +43,25 @@
             </div>
             <br/>
         </div>
-            <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-success" style="width:25%;">OK</button>
-        <button type="button" class="btn btn-danger" style="width:25%;"
-                onclick="window.location.href = '/customers';">Cancel
-        </button>
-    </div>
+
+        <div class="d-flex justify-content-center">
+            <div class="alert alert-warning" role="alert" style="width:75%;">
+                <label for="customers" class="form-label font-monospace fw-bold"><i class="bi bi-3-circle-fill"></i>
+                    Choose the customer Name:</label>
+                <select class="form-select" id="customers" name="customers">
+                    {% for c in customers %}
+                    <option value="{{ c.customerid }}">{{ c.firstname }} {{ c.familyname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <input type="submit" class="btn btn-success" style="width:25%; value="OK">
+            <button type="button" class="btn btn-danger" style="width:25%;"
+                    onclick="window.location.href = '/customers';">Cancel
+            </button>
+        </div>
     </form>
 </div>
 

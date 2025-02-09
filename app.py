@@ -198,20 +198,13 @@ def searchcustomer():
 @app.route("/booking/add", methods=["GET", "POST"])
 def makebooking():
     if request.method == "POST":
-        selected_customers = request.form.get('customer')
-        selected_startdate = request.form.get('startdate')
-        firstname = selected_customers.split(' ')[0]
-        familyname = selected_customers.split(' ')[1]
-        qstr = f"SELECT * FROM customers WHERE customers.firstname ='{firstname}' AND customers.familyname ='{familyname}'; "
+        customerid = request.form.get('customers')
+        tourgroupid = request.form.get('tourgroupid')
+        
         mycursor = getCursor()
-        mycursor.execute(qstr)
-        customerid = mycursor.fetchone()['customerid']
-
-        qstr = f"SELECT tourgroupid FROM tourgroups WHERE startdate = '{selected_startdate}';"
-        mycursor.execute(qstr)
-        tourgroupid = mycursor.fetchall()
         sqlstr = "INSERT INTO tourbookings (customerid, tourgroupid) VALUES (%s, %s);"
         mycursor.execute(sqlstr, (customerid, tourgroupid))
+
         return redirect('/customers')
     else:
         mycursor = getCursor()
