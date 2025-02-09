@@ -77,9 +77,34 @@ def tourlist():
 
     sqlstr = "SELECT * FROM customers;"
     my_cursor.execute(sqlstr)
-    filter_customers = my_cursor.fetchall()
+    filter_customers = my_cursor.fetchall()[0]
 
     return render_template("tourlist.html", tourname = tourname, customerlist = customerlist, filter_customers = filter_customers)
+
+
+@app.route("/tours/search", methods=['POST'])
+def searchtours():
+    filter_by_name = request.form.get('filter_by_customer')
+    firstname = filter_by_name.split(' ')[0]
+    familyname = filter_by_name.split(' ')[1]
+    cursor = getCursor()
+    qstr = f"SELECT * FROM customers;" 
+    cursor.execute(qstr)    
+    filter_customers = cursor.fetchall()
+    qstr = f"SELECT customerid FROM customers WHERE firstname = '{firstname}' AND familyname = '{familyname}';" 
+    cursor.execute(qstr) 
+    customerid = cursor.fetchone()['customerid']
+    qstr = f"""SELECT customers.firstname, customers.familyname, customers.dob, customers.email, customers.phone, \
+                    tours.tourid, tours.tourname, tourbookings.bookingid FROM tourbookings \
+               JOIN customers ON customers.customerid = {customerid} \
+               JOIN tourgroups ON tourbookings.tourgroupid = tourgroups.tourgroupid \
+               JOIN tours ON tours.tourid = tourgroups.tourid \
+               ORDER BY customers.firstname, customers.dob ASC;
+            """
+    cursor.execute(qstr)
+    customerlist = cursor.fetchall()    
+
+    return render_template("tourlist.html", tourname = f"{filter_by_name}'s Travels", customerlist = customerlist, filter_customers = filter_customers)
 
 
 @app.route("/customers", methods=["GET", "POST"])

@@ -27,12 +27,14 @@
                     <a class="nav-link" href="#" style="background-color:darkgreen; color:white;">  Filter by Customer:</a>
                 </li>
                 <li class="nav-item">
-                    <select class="form-select" id="filter_by_customer" name="filter_by_customer" required>
-                        <option value="0">All</option>
-                        {% for f in filter_customers %}
-                        <option value="{{ f.firstname }} {{ f.familyname }}">{{ f.firstname }} {{ f.familyname }}</option>
-                        {% endfor %}
-                    </select>
+                    <form action="/tours/search" method="POST">
+                        <select class="form-select" id="filter_by_customer" name="filter_by_customer" onchange="submit();" required>
+                            <option value="0">All</option>
+                            {% for f in filter_customers %}
+                            <option value="{{ f.firstname }} {{ f.familyname }}">{{ f.firstname }} {{ f.familyname }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
                 </li>
             </ul>
         </div>
@@ -68,33 +70,5 @@
         {% endfor %}
     </tbody>
 </table>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const filter_by_customer = document.getElementById('filter_by_customer');
-        const tableRows = document.querySelectorAll('#tour-table tbody tr');
-        filter_by_customer.addEventListener('change', function () {
-            const filterValue = filter_by_customer.value;
-            // console.log(">>> Debug:" + filterValue);
-            if (filterValue === '0') {
-                tableRows.forEach(row => {
-                    row.style.display = '';
-                });
-            } else {
-                tableRows.forEach(row => {
-                    const customerId = row.querySelector('td:nth-child(3)').textContent + ' ' + row.querySelector('td:nth-child(4)').textContent;
-                    // console.log(">>> Debug:" + customerId);
-                    if (customerId === filterValue) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            }
-        });
-    });
-
-</script>
 
 {% endblock %}
