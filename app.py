@@ -100,6 +100,16 @@ def addcustomer():
         req_customer_firstname = request.form.get("firstname")
         req_customer_familyname = request.form.get("familyname")
         req_customer_dob = request.form.get("birthday")
+
+        # age 
+        dob = datetime.strptime(req_customer_dob, "%Y-%m-%d")
+        age = datetime.now() - dob
+        age_in_years = age.days / 365.25 
+
+        if age_in_years > 110:
+            return """<h1>Age: Must be less than 110</h1><br/> \
+                    <button type="button" onclick="window.location.href = '/customers/add';">Back to previous page</button>"""
+
         req_customer_email = request.form.get("email")
         req_customer_phone = request.form.get("phone")
 

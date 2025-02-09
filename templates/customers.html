@@ -56,37 +56,6 @@
                 </div>
             </form>
         </div>
-
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var birthday = document.getElementById('birthday');
-                birthday.addEventListener('change', function () {
-                    var input_date = new Date(birthday.value);
-                    var today_date = new Date();
-                    var actual_age = today_date.getFullYear() - input_date.getFullYear();
-                    var monthDiff = today_date.getMonth() - input_date.getMonth();
-                    if (monthDiff < 0 || (monthDiff === 0 && today_date.getDate() < input_date.getDate())) {
-                        actual_age--;
-                    }
-
-                    var toast = document.getElementById('birthday_toast');
-                    if (actual_age < 18) {
-                        toast.textContent = "You are under 18 years old, please input your parents";
-                        toast.style.display = "block";
-                        setTimeout(() => {
-                            toast.style.display = "none";
-                        }, 3000);
-                    } else if (actual_age >= 110) {
-                        toast.textContent = "You are over 110 years old, please input your real information.";
-                        toast.style.display = "block";
-                        setTimeout(() => {
-                            toast.style.display = "none";
-                        }, 3000);
-                    }
-                });
-            });
-        </script>
     {% endif %}
 
 <!-- customer edit -->
