@@ -9,12 +9,12 @@
     <div style="width: 800px;">
         <form action="tours" method="POST" class="needs-validation" novalidate>
             <div>
-            <!-- https://guestnewzealand.com/wp-content/uploads/2013/03/Kea-Motorhome-travel-2.jpg -->
+                <!-- https://guestnewzealand.com/wp-content/uploads/2013/03/Kea-Motorhome-travel-2.jpg -->
                 <img src="{{ url_for('static', filename='img/tourbackground.jpg') }}" height="400" width="100%"
                 alt="Tours">
             </div>
             <div>
-                <label for="tourlist"><h3 style="color:white;">STEP 1: Select the tour to display</h3></label>
+                <label for="tourlist"><h3>STEP 1: Select the tour to display</h3></label>
                 <select class="form-select" name="tourid" id="tourid" required>
                     <option disabled selected value="">Choose a tour</option>
                     {% for tour in tours %}
@@ -35,7 +35,7 @@
         <form action="tours/list" method="POST" class="needs-validation" novalidate>
             <input type="hidden" name="tourid" value="{{tourid}}"/>
             <div>
-                <label for="tourgroup"><h3 style="color:white;">STEP 2: Select the tour group to display</h3></label>
+                <label for="tourgroupid"><h3>STEP 2: Select the tour group to display</h3></label>
                 <select class="form-select" name="tourgroupid" id="tourgroupid" required>
                     <option disabled selected value="">Choose a tour group</option>
                     {% for tour in tourgroups %}

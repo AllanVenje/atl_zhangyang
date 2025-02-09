@@ -7,29 +7,30 @@
 {% if booking_render == 1 %}
 
 <div class="container mt-5">
-    <!-- https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg -->
-    <img src="{{ url_for('static', filename='img/customer_new.jpg') }}" alt="customer_new" srcset="customer_new">
     <p class="fs-1 font-monospace text-center">New Booking Tours</p>
     <br/>
-    <form action="/booking/add" method="POST">
-
-        <div class="d-flex justify-content-center">
-            <div class="alert alert-warning" role="alert" style="width:75%;">
-                <label for="customer" class="form-label font-monospace fw-bold"><i class="bi bi-1-circle-fill"></i>
-                    Customer Name:</label>
-                <select class="form-select" id="customer" name="customer">
-                    {% for customer in customers %}
-                    <option value="{{ customer.customerid }}">{{ customer.firstname }} {{ customer.familyname }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+    <div class="d-flex justify-content-center">
+        <div class="alert alert-warning" role="alert" style="width:75%;">
+            <label for="customer" class="form-label font-monospace fw-bold"><i class="bi bi-1-circle-fill"></i>
+                Customer Name:</label>
+            <select class="form-select" id="customer" name="customer">
+                {% for customer in customers %}
+                <option value="{{ customer.customerid }}">{{ customer.firstname }} {{ customer.familyname }}</option>
+                {% endfor %}
+            </select>
         </div>
+    </div>
 
+    <form action="/booking/switch" method="POST">
         <div class="d-flex justify-content-center">
             <div class="alert alert-warning" role="alert" style="width:75%;">
                 <label for="tour" class="form-label  font-monospace fw-bold"><i class="bi bi-2-circle-fill"></i> Tour
                     Name:</label>
-                <select class="form-select" id="tour" name="tour">
+                {% if tours is defined %}
+                    <select class="form-select" id="tour" name="tour" onchange="submit();" >
+                {% else %}
+                    <select class="form-select" id="tour" name="tour" onchange="submit();" disabled >
+                {% endif %}
                     <option value="0">No Select</option>
                     {% for tour in tours %}
                     <option value="{{ tour.tourid }}">{{ tour.tourname }}</option>
@@ -37,64 +38,30 @@
                 </select>
             </div>
         </div>
+    </form>
 
+    <form action="/booking/add" method="POST">
         <div class="d-flex justify-content-center">
             <div class="alert alert-warning" role="alert" style="width:75%;">
-                <label for="tourgroups" class="form-label  font-monospace fw-bold"><i class="bi bi-2-circle-fill"></i>
+                <label for="tourgroupid" class="form-label  font-monospace fw-bold"><i class="bi bi-2-circle-fill"></i>
                     Tour Group:</label>
-                <select class="form-select" id="tourgroups" name="tourgroups" disabled>
+                <select class="form-select" id="tourgroupid" name="tourgroupid">
+                    {% for tg in tourgroups %}
+                    <option value="{{ tg.tourgroupid }}">{{ tg.startdate }}</option>
+                    {% endfor %}
                 </select>
             </div>
+            <br/>
         </div>
-
-        <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-success" style="width:25%;">OK</button>
-            <button type="button" class="btn btn-danger" style="width:25%;"
-                    onclick="window.location.href = '/customers';">Cancel
-            </button>
-        </div>
+            <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-success" style="width:25%;">OK</button>
+        <button type="button" class="btn btn-danger" style="width:25%;"
+                onclick="window.location.href = '/customers';">Cancel
+        </button>
+    </div>
     </form>
 </div>
 
-<script>
-    const tourid_selector = document.getElementById('tour')
-    var selectElement = document.getElementById('tourgroups')
-
-    tourid_selector.addEventListener('change', function() {
-    console.log(">>> Debug: Changed! ")
-    const tourid_selector_text = tourid_selector.options[tourid_selector.selectedIndex].text
-    
-    console.log(">>> Debug: Clear Tourgroup")
-    selectElement.innerHTML = ''
-
-    if (tourid_selector_text === 'No Select') return
-    console.log(">>> Debug:",  tourid_selector_text)
-    fetch('/booking/add', {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(tourid_selector_text)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok')
-          }
-          return response.json()
-    })
-    .then(data => {
-        data.forEach (d => {
-            console.log('>>> Debug: Received data, ', 'Start date:', d.startdate, ',Tour id:', d.tourid, ',Tour Groups:', d.tourgroupid)
-            const option = document.createElement('option')
-            option.value = d.tourgroupid
-            option.textContent = d.startdate
-            selectElement.appendChild(option)
-        })
-        selectElement.disabled = false
-    })
-    .catch(error => console.error('Error:', error))
-})
-</script>
 {% endif %}
 
 {% if booking_render == 2 %}

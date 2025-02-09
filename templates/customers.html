@@ -5,149 +5,175 @@
 {% block content %}
 
 <!--customer add-->
-    {% if customer == 1 %}
-        <div class="container mt-5">
-            <h2 class="card-title text-center">New Customer Registration</h2>
-            <div>
-                <!-- https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg  -->                    
-                <img src="{{ url_for('static', filename='img/customer_new.jpg') }}" height="400", width="100%">
-            </div>
-            <form action="/customers/add" method="POST">
-                <div class="mb-3">
-                    <label for="firstName" class="form-label"><i class="bi bi-1-circle-fill"></i> <mark>First
-                        Name</mark></label>
-                    <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Ex: Mike"
-                            required>
-                </div>
-                <div class="mb-3">
-                    <label for="familyname" class="form-label"><i class="bi bi-2-circle-fill"></i></i><mark>FamilyName</mark></label>
-                    <input type="text" class="form-control" id="familyname" name="familyname" placeholder="Ex: Fished"
-                            required>
-                </div>
-                <div class="mb-3">
-                    <label for="birthday" class="form-label"><i class="bi bi-3-circle-fill"></i> <mark>Date
-                        of Birthday</mark></label>
-                    <div id="birthday_toast"></div>
-                    <input type="date" class="form-control" id="birthday" name="birthday" required>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label"><i class="bi bi-4-circle-fill"></i></i>
-                        <mark>Email</mark></label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Ex: input your email"
-                            required>
-                </div>
-                <div class="mb-3">
-                    <label for="phone" class="form-label"><i class="bi bi-5-circle-fill"></i>
-                        <mark>Phone</mark></label>
-                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone(Not required)">
-                </div>
-                <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-success" style="width:25%;">OK</button>
-                    <button type="button" class="btn btn-danger" style="width:25%;" onclick="window.location.href = '/customers';">Cancel</button>
-                </div>
-            </form>
+{% if customer == 1 %}
+<div class="container justify-content-center d-flex">
+    <div class="col-md-6">
+        <h2 class="card-title text-center">New Customer Registration</h2>
+        <div>
+            <!-- https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg  -->
+            <img src="{{ url_for('static', filename='img/customer_new.jpg') }}" height="400" , width="100%">
         </div>
-    {% endif %}
+        <form action="/customers/add" method="POST">
+            <div class="mb-3">
+                <label for="firstName" class="form-label"><i class="bi bi-1-circle-fill"></i>
+                    <mark>First
+                        Name
+                    </mark>
+                </label>
+                <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Ex: Mike"
+                       required>
+            </div>
+            <div class="mb-3">
+                <label for="familyname" class="form-label"><i class="bi bi-2-circle-fill"></i></i>
+                    <mark>FamilyName</mark>
+                </label>
+                <input type="text" class="form-control" id="familyname" name="familyname" placeholder="Ex: Fished"
+                       required>
+            </div>
+            <div class="mb-3">
+                <label for="birthday" class="form-label"><i class="bi bi-3-circle-fill"></i>
+                    <mark>Date
+                        of Birthday
+                    </mark>
+                </label>
+                <div id="birthday_toast"></div>
+                <input type="date" class="form-control" id="birthday" name="birthday" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label"><i class="bi bi-4-circle-fill"></i></i>
+                    <mark>Email</mark>
+                </label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Ex: input your email"
+                       required>
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label"><i class="bi bi-5-circle-fill"></i>
+                    <mark>Phone</mark>
+                </label>
+                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone(Not required)">
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-success" style="width:25%;">OK</button>
+                <button type="button" class="btn btn-danger" style="width:25%;"
+                        onclick="window.location.href = '/customers';">Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
 
 <!-- customer edit -->
-    {% if customer == 2 %}
-        <div class="container justify-content-center d-flex">
-            <div class="col-md-6">
-                <h2 class="card-title text-center">Edit Customer Information</h2>
-                <div>
-                    <!-- https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg  -->                    
-                    <img src="{{ url_for('static', filename='img/customer_new.jpg') }}" height="400", width="100%">
-                </div>
-                <br/>
-                <form id="customers_edit" action="/customers/edit" method="POST">
-                    <div style="margin-bottom: 15px;">
-                        <label for="customerlist"><mark>Choose your firstname :</mark></label>
-                        <select class="form-control" id="customerid" name="customerid" required>
-                            {% for c in customers %}
-                                <option value="{{ c['customerid'] }}">{{ c['firstname'] }} {{ c['familyname'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="dob"><mark>New Date of Birth</mark></label>
-                        <input style="border-radius: 5px;" type="date" class="form-control" id="dob" name="dob" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email"><mark>New Email</mark></label>
-                        <input style="border-radius: 5px;" type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="phone"><mark>New Phone</mark></label>
-                        <input style="border-radius: 5px;" type="tel" class="form-control" id="phone" name="phone" >
-                    </div>
-                    <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-success" style="width:25%;">OK</button>
-                    <button type="button" class="btn btn-danger" style="width:25%;" onclick="window.location.href = '/customers';">Cancel</button>
-                </div>
-                </form>
+{% if customer == 2 %}
+<div class="container justify-content-center d-flex">
+    <div class="col-md-6">
+        <h2 class="card-title text-center">Edit Customer Information</h2>
+        <div>
+            <!-- https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg  -->
+            <img src="{{ url_for('static', filename='img/customer_new.jpg') }}" height="400" , width="100%">
+        </div>
+        <br/>
+        <form id="customers_edit" action="/customers/edit" method="POST">
+            <div style="margin-bottom: 15px;">
+                <label for="customerlist">
+                    <mark>Choose your firstname :</mark>
+                </label>
+                <select class="form-control" id="customerid" name="customerid" required>
+                    {% for c in customers %}
+                    <option value="{{ c['customerid'] }}">{{ c['firstname'] }} {{ c['familyname'] }}</option>
+                    {% endfor %}
+                </select>
             </div>
-        </div>e
-    {% endif %}
+            <div class="mb-3">
+                <label for="dob">
+                    <mark>New Date of Birth</mark>
+                </label>
+                <input style="border-radius: 5px;" type="date" class="form-control" id="dob" name="dob" required>
+            </div>
+            <div class="mb-3">
+                <label for="email">
+                    <mark>New Email</mark>
+                </label>
+                <input style="border-radius: 5px;" type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="phone">
+                    <mark>New Phone</mark>
+                </label>
+                <input style="border-radius: 5px;" type="tel" class="form-control" id="phone" name="phone">
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-success" style="width:25%;">OK</button>
+                <button type="button" class="btn btn-danger" style="width:25%;"
+                        onclick="window.location.href = '/customers';">Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>e
+{% endif %}
 
 <!-- customer display -->
-    {% if customer == 3 %}
-        <br>
-        <div class="shadow p-4 mb-5 bg-body-tertiary rounded">
-            <div class="alert alert-dark" role="alert">
-                <h2 class="d-flex justify-content-center">Customer List: Total {{ customers | length }} HCs</h2>
-            </div>
-            <div>
-                <!-- https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg  -->                    
-                <img src="{{ url_for('static', filename='img/customer_new.jpg') }}" height="400", width="100%">
-            </div>
-            <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/add';">Add
-                Customers [New]...
-            </button>
-            <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/edit';">
-                Edit
-                Customers [Selected]...
-            </button>
-            <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/booking/add';">
-                Add Booking [Tour]...
-            </button>
-            <div class="container mt-5">
-                <form action="/customers/search", method="POST">
-                    <div class="input-group input-group-lg">
-                        <input type="text" class="form-control" id="search_input" name="search_input" placeholder="Search By full First Name">
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <input class="btn btn-lg btn-warning" type="submit" id="search_button" name="search_button"/>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+{% if customer == 3 %}
+<br>
+<div class="shadow p-4 mb-5 bg-body-tertiary rounded">
+    <div class="alert alert-dark" role="alert">
+        <h2 class="d-flex justify-content-center">Customer List: Total {{ customers | length }} HCs</h2>
+    </div>
+    <div class="container mt-5">
+        <!-- https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg  -->
+        <img src="{{ url_for('static', filename='img/customer_new.jpg') }}" height="200" , width="300">
+        <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/add';">Add
+        Customers [New]...
+        </button>
+        <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/edit';">
+            Edit
+            Customers [Selected]...
+        </button>
+        <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/booking/add';">
+            Add Booking [Tour]...
+        </button>
+    </div>
 
-        <table id="customer-table" class="table table-striped table-hover">
-            <thead>
-            <tr>
-                <th scope="col">Customer ID</th>
-                <th scope="col">First Name</th>
-                <th scope="col">Family Name</th>
-                <th scope="col">Date of Birth</th>
-                <th scope="col">Email</th>
-                <th scope="col">Phone</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for customer in customers %}
-                <tr>
-                    <td class="table-success">{{ customer.customerid }}</td>
-                    <td>{{ customer.firstname }}</td>
-                    <td>{{ customer.familyname }}</td>
-                    <td>{{ customer.dob }}</td>
-                    <td>{{ customer.email }}</td>
-                    <td>{{ customer.phone }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="container mt-5">
+        <form action="/customers/search" , method="POST">
+            <div class="input-group input-group-lg">
+                <input type="text" class="form-control" id="search_input" name="search_input"
+                       placeholder="Search By full First Name">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <input class="btn btn-lg btn-warning" type="submit" id="search_button" name="search_button"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
-    {% endif %}
+<table id="customer-table" class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <th scope="col">Customer ID</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Family Name</th>
+        <th scope="col">Date of Birth</th>
+        <th scope="col">Email</th>
+        <th scope="col">Phone</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for customer in customers %}
+    <tr>
+        <td class="table-success">{{ customer.customerid }}</td>
+        <td>{{ customer.firstname }}</td>
+        <td>{{ customer.familyname }}</td>
+        <td>{{ customer.dob }}</td>
+        <td>{{ customer.email }}</td>
+        <td>{{ customer.phone }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endif %}
 
 {% endblock %}

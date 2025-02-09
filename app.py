@@ -1,3 +1,5 @@
+from calendar import firstweekday
+
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -195,40 +197,47 @@ def searchcustomer():
 
 @app.route("/booking/add", methods=["GET", "POST"])
 def makebooking():
-    #Make a booking
-    if request.method == "POST" and request.content_type == "application/json":
-        req_tourname = request.json
+    if request.method == "POST":
+        selected_customers = request.form.get('customer')
+        selected_startdate = request.form.get('startdate')
+        firstname = selected_customers.split(' ')[0]
+        familyname = selected_customers.split(' ')[1]
+        qstr = f"SELECT * FROM customers WHERE customers.firstname ='{firstname}' AND customers.familyname ='{familyname}'; "
         mycursor = getCursor()
-        sqlstr = f"""SELECT tg.tourgroupid, tg.tourid, DATE_FORMAT(tg.startdate, '%Y-%m-%d') AS startdate FROM tourgroups AS tg 
-                    JOIN tours AS t ON t.tourid=tg.tourid WHERE t.tourname='{req_tourname}' ORDER BY tg.startdate ASC;"""
-        mycursor.execute(sqlstr)
-        tourgroups = mycursor.fetchall()
-        return jsonify(tourgroups)
-    
-    elif request.method == "POST" and request.content_type == "application/x-www-form-urlencoded":
-        req_customerid = request.form.get("customer")
-        req_tourid = request.form.get('tour')
-        req_tourgroupid = request.form.get("tourgroups")
-        mycursor = getCursor()
+        mycursor.execute(qstr)
+        customerid = mycursor.fetchone()['customerid']
+
+        qstr = f"SELECT tourgroupid FROM tourgroups WHERE startdate = '{selected_startdate}';"
+        mycursor.execute(qstr)
+        tourgroupid = mycursor.fetchall()
         sqlstr = "INSERT INTO tourbookings (customerid, tourgroupid) VALUES (%s, %s);"
-        mycursor.execute(sqlstr, (req_customerid, req_tourgroupid))
-        return f"""
-                    <h2 style='text-align:center;'> WELCOME, Booking Done. Please back to previous page. </h2>
-                """
+        mycursor.execute(sqlstr, (customerid, tourgroupid))
+        return redirect('/customers')
     else:
         mycursor = getCursor()
         sqlstr = "SELECT * FROM customers;"
         mycursor.execute(sqlstr)
         customers = mycursor.fetchall()
-        # get tour name details
+
         sqlstr = "SELECT * FROM tours;"
         mycursor.execute(sqlstr)
         tours = mycursor.fetchall()
-        # get tour group details
-        sqlstr = "SELECT * FROM tourgroups;"
-        mycursor.execute(sqlstr)
-        tourgroups = mycursor.fetchall()
-        return render_template("booking.html", booking_render=1,  customers=customers, tours=tours, tourgroups=tourgroups)
+        return render_template("booking.html", booking_render=1, tours=tours, customers=customers)
+
+
+@app.route('/booking/switch', methods=["POST"])
+def switchbooking():
+    tourid = request.form.get('tour')
+    cursor = getCursor()
+    qstr = f"SELECT * FROM tourgroups WHERE tourid={tourid};"
+    cursor.execute(qstr)
+    tourgroups = cursor.fetchall()  
+
+    qstr = "SELECT * FROM customers;"
+    cursor.execute(qstr)
+    customers = cursor.fetchall()
+
+    return render_template("booking.html", booking_render=1, customers=customers, tourgroups=tourgroups)
 
 
 @app.errorhandler(404)
