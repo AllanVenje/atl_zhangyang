@@ -4,22 +4,15 @@
 
 {% block content %}
 
-<style>
-    body {
-        /* https://guestnewzealand.com/wp-content/uploads/2013/03/Kea-Motorhome-travel-2.jpg */
-        background-image: url({{ url_for('static', filename='img/tourbackground.jpg')}});
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: center;
-        height: 100vh;
-        margin: 0;
-    }
-</style>
 
 <div class="container d-flex justify-content-center">
     <div style="width: 800px;">
         <form action="tours" method="POST" class="needs-validation" novalidate>
+            <div>
+            <!-- https://guestnewzealand.com/wp-content/uploads/2013/03/Kea-Motorhome-travel-2.jpg -->
+                <img src="{{ url_for('static', filename='img/tourbackground.jpg') }}" height="400" width="100%"
+                alt="Tours">
+            </div>
             <div>
                 <label for="tourlist"><h3 style="color:white;">STEP 1: Select the tour to display</h3></label>
                 <select class="form-select" name="tourid" id="tourid" required>

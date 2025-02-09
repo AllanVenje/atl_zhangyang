@@ -3,22 +3,12 @@
 {% block title %}ATL - Booking{% endblock %}
 
 {% block content %}
-<style>
-    body {
-    /*https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg */
-    background-image: url({{ url_for('static', filename='img/customer_new.jpg') }});
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    height: 100vh;
-    margin: 0;
-    }
-</style>
 
 {% if booking_render == 1 %}
 
 <div class="container mt-5">
+    <!-- https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg -->
+    <img src="{{ url_for('static', filename='img/customer_new.jpg') }}" alt="customer_new" srcset="customer_new">
     <p class="fs-1 font-monospace text-center">New Booking Tours</p>
     <br/>
     <form action="/booking/add" method="POST">

@@ -4,18 +4,14 @@
 
 {% block content %}
 
-
-<style>
-    body {
-/*        https://www.tripsavvy.com/thmb/7pEOGMVeCbvcNmT60iqYPH-J6-A=/2119x1415/filters:fill(auto,1)/panoramic-view-nature-landscape-in-south-island-new-zealand-898280184-b1d7fd1b8e86441083b564d31a75066e.jpg*/
-        background-image: url({{ url_for('static', filename='img/Covers.jpg')}});
-    }
-</style>
-
 <div class="container mt-5">
-<!--    https://th.bing.com/th/id/R.3c0e2d5669061634226a134eaf89bd61?rik=A24kJfYsQUU8hQ&pid=ImgRaw&r=0-->
+        <!-- https://th.bing.com/th/id/R.3c0e2d5669061634226a134eaf89bd61?rik=A24kJfYsQUU8hQ&pid=ImgRaw&r=0-->
     <img src="{{ url_for('static', filename='img/flags.jpg') }}" height="200" width="400"
-        alt="New Zealand Flags"><br /><br />
+        alt="New Zealand Flags"><br />
+        <!-- https://www.tripsavvy.com/thmb/7pEOGMVeCbvcNmT60iqYPH-J6-A=/2119x1415/filters:fill(auto,1)/panoramic-view-nature-landscape-in-south-island-new-zealand-898280184-b1d7fd1b8e86441083b564d31a75066e.jpg -->
+    <img src="{{ url_for('static', filename='img/Covers.jpg') }}" height="200" width="100%"
+    alt="Home Covers"><br />
+        <br />
     <div class="alert alert-success" role="alert">
         <h1 class="alert-heading">Home</h1>
         <p> New Zealand is a country of stunning and diverse natural beauty: jagged mountains, rolling pasture land,
@@ -39,10 +35,10 @@
         <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/';">Home</button>
       </div>
       <div class="col">
-        <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/tours';">Tours</button>
+        <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/tours';">Tours -></button>
       </div>
       <div class="col">
-        <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers';">Customers</button>
+        <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers';">Customers -></button>
       </div>
       </div>
     </div>

@@ -143,13 +143,15 @@
                 Add Booking [Tour]...
             </button>
             <div class="container mt-5">
-                <div class="input-group input-group-lg">
-                    <input style="border-radius:10px;border: 2px solid blue;" type="text" class="form-control" id="search-input" placeholder="Search By First Name">
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class="btn btn-lg btn-warning" type="button" id="search-button"> Search </button>
+                <form action="/customers/search", method="POST">
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control" id="search_input" name="search_input" placeholder="Search By full First Name">
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <input class="btn btn-lg btn-warning" type="submit" id="search_button" name="search_button"/>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
 
@@ -177,33 +179,6 @@
             {% endfor %}
             </tbody>
         </table>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('search-input');
-    const searchButton = document.getElementById('search-button');
-    const tableRows = document.querySelectorAll('#customer-table tbody tr');
-
-    searchButton.addEventListener('click', function () {
-      const value = searchInput.value.trim().toLowerCase();
-      tableRows.forEach(row => {
-        const rowText = row.textContent.trim().toLowerCase();
-        if (rowText.includes(value)) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
-        }
-      });
-    });
-
-    searchInput.addEventListener('keydown', function (event) {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-      }
-    });
-  });
-</script>
-
 
     {% endif %}
 

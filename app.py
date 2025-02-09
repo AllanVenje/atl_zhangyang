@@ -137,6 +137,27 @@ def editcustomer():
 
         return render_template("customers.html", customer=2, customers=customers, tours=tours)
 
+
+@app.route("/customers/search", methods=["POST"])
+def searchcustomer():
+    req_search_firstname = request.form.get('search_input')
+
+    if req_search_firstname == '': 
+        return redirect('/customers')
+    
+    if req_search_firstname.upper() == 'ALL':
+        return redirect('/customers')
+    
+    my_cursor = getCursor()
+    sqlstr = f"SELECT * FROM customers WHERE customers.firstname='{req_search_firstname}';"
+    my_cursor.execute(sqlstr)
+    customers = my_cursor.fetchall()
+    if len(customers) > 0:
+        return render_template("customers.html",customer=3, customers=customers)
+    else:
+        return redirect('/customers')  # not found customer, return all customer display.
+        
+
 @app.route("/booking/add", methods=["GET", "POST"])
 def makebooking():
     #Make a booking
