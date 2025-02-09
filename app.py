@@ -77,7 +77,7 @@ def tourlist():
 
     sqlstr = "SELECT * FROM customers;"
     my_cursor.execute(sqlstr)
-    filter_customers = my_cursor.fetchall()[0]
+    filter_customers = my_cursor.fetchall()
 
     return render_template("tourlist.html", tourname = tourname, customerlist = customerlist, filter_customers = filter_customers)
 

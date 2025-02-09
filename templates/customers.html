@@ -4,23 +4,14 @@
 
 {% block content %}
 
-    <style>
-        body {
-            /*https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg */
-            background-image: url({{ url_for('static', filename='img/customer_new.jpg') }});
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-position: center;
-            height: 100vh;
-            margin: 0;
-        }
-    </style>
-
 <!--customer add-->
     {% if customer == 1 %}
         <div class="container mt-5">
             <h2 class="card-title text-center">New Customer Registration</h2>
+            <div>
+                <!-- https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg  -->                    
+                <img src="{{ url_for('static', filename='img/customer_new.jpg') }}" height="400", width="100%">
+            </div>
             <form action="/customers/add" method="POST">
                 <div class="mb-3">
                     <label for="firstName" class="form-label"><i class="bi bi-1-circle-fill"></i> <mark>First
@@ -63,6 +54,10 @@
         <div class="container justify-content-center d-flex">
             <div class="col-md-6">
                 <h2 class="card-title text-center">Edit Customer Information</h2>
+                <div>
+                    <!-- https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg  -->                    
+                    <img src="{{ url_for('static', filename='img/customer_new.jpg') }}" height="400", width="100%">
+                </div>
                 <br/>
                 <form id="customers_edit" action="/customers/edit" method="POST">
                     <div style="margin-bottom: 15px;">
@@ -100,6 +95,10 @@
         <div class="shadow p-4 mb-5 bg-body-tertiary rounded">
             <div class="alert alert-dark" role="alert">
                 <h2 class="d-flex justify-content-center">Customer List: Total {{ customers | length }} HCs</h2>
+            </div>
+            <div>
+                <!-- https://cdn.kimkim.com/files/a/content_articles/featured_photos/bc55703b5accf7a1c9783ec84ae4a997ca64f1c2/big-6ffe2a03fdd2112b46ffd1bc070650b8.jpg  -->                    
+                <img src="{{ url_for('static', filename='img/customer_new.jpg') }}" height="400", width="100%">
             </div>
             <button type="button" class="btn btn-lg btn-success" onclick="window.location.href = '/customers/add';">Add
                 Customers [New]...
